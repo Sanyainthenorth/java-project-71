@@ -1,0 +1,65 @@
+name: Java CI
+
+# Определяем триггеры для запуска: когда происходит push в репозиторий или открывается pull request
+on:
+  - push  # Триггер при пуше изменений в репозиторий
+  - pull_request  # Триггер при создании или обновлении pull request
+
+jobs:
+  build:
+    # Операционная система для выполнения работы (в данном случае, Ubuntu)
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг для клонирования репозитория в рабочую среду
+      - uses: actions/checkout@v4
+
+      # Шаг для установки Java (версия 21, дистрибутив Temurin)
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'  # Указываем нужную версию Java
+          distribution: 'temurin'  # Указываем дистрибутив OpenJDK
+
+      # Шаг для установки Gradle
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          fetch-depth: 0  # Полная история репозитория для Gradle
+ # Переход в директорию app перед запуском make или gradle команд
+      - name: Change directory to app
+        run: cd app
+      # Шаг для выполнения сборки проекта с помощью Gradle (выполняет ./gradlew build)
+      - name: Execute Gradle build
+        run: ./gradlew build  # Запуск Gradle для сборки проекта
+
+      # Шаг для генерации отчета о покрытии тестами с помощью команды Makefile (make report)
+      - name: Generate coverage report
+        run: make report  # Здесь запускается команда make report, которая, например, может генерировать отчет с помощью Jacoco
+
+      # Шаг для кэширования пакетов SonarQube, чтобы ускорить дальнейшие сборки
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache  # Путь, где кэшируются пакеты SonarQube
+          key: ${{ runner.os }}-sonar  # Ключ для кэширования
+          restore-keys: ${{ runner.os }}-sonar  # Восстановление из кэша для улучшения скорости
+
+      # Шаг для кэширования пакетов Gradle, чтобы избежать повторных загрузок зависимостей
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches  # Путь, где кэшируются пакеты Gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}  # Ключ для кэширования, зависит от изменений в файлах .gradle
+          restore-keys: ${{ runner.os }}-gradle  # Восстановление из кэша для ускорения сборки
+
+      # Шаг для анализа кода с помощью SonarQube
+      - name: Build and analyze with SonarQube
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Токен для авторизации в SonarQube
+        run: ./gradlew sonarqube --info  # Запуск анализа с помощью плагина SonarQube для Gradle
+# Загружаем отчет о покрытии на Codacy
+      - name: Upload coverage to Codacy
+        uses: codacy/codacy-coverage-reporter-action@v1.0.9
+        with:
+          coverage_report_path: app/build/reports/jacoco/test/jacocoTestReport.xml
+          project_token: ${{ secrets.CODACY_PROJECT_TOKEN }}

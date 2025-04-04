@@ -11,7 +11,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public class ReadParse {
-    public static String readFile(String filePath) throws Exception{
+    public static String readFile(String filePath) throws Exception {
         // Формируем абсолютный путь,
         // если filePath будет содержать относительный путь,
         // то мы всегда будет работать с абсолютным
@@ -24,6 +24,6 @@ public class ReadParse {
 
     public static Map<String, Object> parseJson(String content) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(content, new TypeReference<Map<String, Object>>() {});
+        return objectMapper.readValue(content, new TypeReference<Map<String, Object>>() { });
     }
 }
