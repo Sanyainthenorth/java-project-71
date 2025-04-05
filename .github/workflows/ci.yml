@@ -23,15 +23,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           fetch-depth: 0  # Полная история репозитория для Gradle
- # Переход в директорию app перед запуском make или gradle команд
-      - name: Change directory to app
-        run: cd app
       # Шаг для выполнения сборки проекта с помощью Gradle (выполняет ./gradlew build)
       - name: Execute Gradle build
+        working-directory: ./app
         run: ./gradlew build  # Запуск Gradle для сборки проекта
 
       # Шаг для генерации отчета о покрытии тестами с помощью команды Makefile (make report)
       - name: Generate coverage report
+        working-directory: ./app
         run: make report  # Здесь запускается команда make report, которая, например, может генерировать отчет с помощью Jacoco
 
       # Шаг для кэширования пакетов SonarQube, чтобы ускорить дальнейшие сборки
@@ -52,6 +51,7 @@ jobs:
 
       # Шаг для анализа кода с помощью SonarQube
       - name: Build and analyze with SonarQube
+	working-directory: ./app
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Токен для авторизации в SonarQube
         run: ./gradlew build sonar --info  # Запуск анализа с помощью плагина SonarQube для Gradle
