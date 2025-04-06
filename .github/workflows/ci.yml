@@ -50,7 +50,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle  # Восстановление из кэша для ускорения сборки
 
       # Шаг для анализа кода с помощью SonarQube
-      - name: Build and analyze with SonarQube
+      - name: Build and analyze
 	working-directory: ./app
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Токен для авторизации в SonarQube
