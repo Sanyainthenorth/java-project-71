@@ -26,19 +26,21 @@ public class App implements Callable<Integer> {
     @Override
     public Integer call() {
         try {
-            String fileContent1 = ReadParse.readFile(filepath1);
-            Map<String, Object> data1 = ReadParse.parseJson(fileContent1);
+            String content1 = ReadParse.readFile(filepath1);
+            String content2 = ReadParse.readFile(filepath2);
 
-            String fileContent2 = ReadParse.readFile(filepath2);
-            Map<String, Object> data2 = ReadParse.parseJson(fileContent2);
+            String format1 = Differ.getFormat(filepath1);
+            String format2 = Differ.getFormat(filepath2);
 
+            Map<String, Object> data1 = ReadParse.parse(content1, format1);
+            Map<String, Object> data2 = ReadParse.parse(content2, format2);
             String diff = Differ.generate(data1, data2);
+
             System.out.println(diff);
 
             return 0;
         } catch (Exception e) {
-            // В случае ошибки выводим её и возвращаем код ошибки (не 0)
-            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
             return 1;
         }
     }

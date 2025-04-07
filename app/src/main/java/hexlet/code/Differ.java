@@ -4,6 +4,15 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Differ {
+    public static String getFormat(String filePath) {
+        if (filePath.endsWith(".json")) {
+            return "json";
+        }
+        if (filePath.endsWith(".yaml") || filePath.endsWith(".yml")) {
+            return "yaml";
+        }
+        throw new IllegalArgumentException("Unknown file format");
+    }
     public static String generate(Map<String, Object> data1, Map<String, Object> data2) {
         StringBuilder diff = new StringBuilder();
 
