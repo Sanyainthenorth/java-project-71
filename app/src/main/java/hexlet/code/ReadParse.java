@@ -1,25 +1,22 @@
 package hexlet.code;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class ReadParse {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final ObjectMapper YAML_MAPPER = new ObjectMapper(new YAMLFactory());
-    public static String readFile(String filePath) throws Exception {
-        // Формируем абсолютный путь,
-        // если filePath будет содержать относительный путь,
-        // то мы всегда будет работать с абсолютным
-        Path path = Paths.get(filePath).toAbsolutePath().normalize();
+    public static String readFile(String filepath) throws Exception {
+
+        Path path = Paths.get(filepath).toAbsolutePath().normalize();
         if (!Files.exists(path)) {
             throw new FileNotFoundException("File '" + path + "' does not exist");
         }

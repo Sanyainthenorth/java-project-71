@@ -1,10 +1,10 @@
 package hexlet.code;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 
@@ -26,18 +26,8 @@ public class App implements Callable<Integer> {
     @Override
     public Integer call() {
         try {
-            String content1 = ReadParse.readFile(filepath1);
-            String content2 = ReadParse.readFile(filepath2);
-
-            String format1 = Differ.getFormat(filepath1);
-            String format2 = Differ.getFormat(filepath2);
-
-            Map<String, Object> data1 = ReadParse.parse(content1, format1);
-            Map<String, Object> data2 = ReadParse.parse(content2, format2);
-            String diff = Differ.generate(data1, data2);
-
+            String diff = Differ.generate(filepath1, filepath2);
             System.out.println(diff);
-
             return 0;
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
