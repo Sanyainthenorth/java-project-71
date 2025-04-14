@@ -24,6 +24,7 @@ public class Stylish {
                 }
                 case "unchanged" -> result.append("    ").append(key).append(": ")
                                           .append(formatValue(node.get("oldValue"))).append("\n");
+                default -> throw new IllegalArgumentException("Неизвестный статус: " + status);
             }
         }
 
