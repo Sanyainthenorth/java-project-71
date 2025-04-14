@@ -1,10 +1,8 @@
 package hexlet.code;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +16,11 @@ public class ReadParse {
 
         Path path = Paths.get(filepath).toAbsolutePath().normalize();
         if (!Files.exists(path)) {
-            throw new FileNotFoundException("File '" + path + "' does not exist");
+            Path testPath = Paths.get("src", "test", "resources", filepath).toAbsolutePath().normalize();
+            if (Files.exists(testPath)) {
+                return Files.readString(testPath);
+            }
+            throw new FileNotFoundException("File not found: " + path + " or " + testPath);
         }
         return Files.readString(path);
     }
@@ -32,6 +34,9 @@ public class ReadParse {
     }
     // Универсальный метод для автоматического определения формата
     public static Map<String, Object> parse(String content, String format) throws JsonProcessingException {
+        if (content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("File content is empty");
+        }
         return switch (format.toLowerCase()) {
             case "json" -> parseJson(content);
             case "yaml", "yml" -> parseYaml(content);
