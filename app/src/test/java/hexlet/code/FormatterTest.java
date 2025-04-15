@@ -1,13 +1,15 @@
 package hexlet.code;
 
 import org.junit.jupiter.api.Test;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FormatterTest {
-    
+
     private final Map<String, Map<String, Object>> testDiff = new HashMap<>();
 
     @Test
@@ -28,11 +30,13 @@ class FormatterTest {
 
     @Test
     void testStylishFormatChanged() {
-        testDiff.put("key", Map.of(
-            "status", "changed",
-            "oldValue", "old",
-            "newValue", "new"
-        ));
+        testDiff.put(
+            "key", Map.of(
+                "status", "changed",
+                "oldValue", "old",
+                "newValue", "new"
+            )
+        );
         String expected = "{\n  - key: old\n  + key: new\n}";
         String actual = Formatter.getFormatter("stylish", testDiff);
         assertEquals(expected, actual);
@@ -56,11 +60,13 @@ class FormatterTest {
 
     @Test
     void testPlainFormatChanged() {
-        testDiff.put("key", Map.of(
-            "status", "changed",
-            "oldValue", "old",
-            "newValue", "new"
-        ));
+        testDiff.put(
+            "key", Map.of(
+                "status", "changed",
+                "oldValue", "old",
+                "newValue", "new"
+            )
+        );
         String expected = "Property 'key' was updated. From old to new";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
@@ -77,8 +83,10 @@ class FormatterTest {
     @Test
     void testUnknownFormat() {
         testDiff.put("key", Map.of("status", "added", "newValue", "value"));
-        assertThrows(IllegalArgumentException.class, () -> {
-            Formatter.getFormatter("unknown", testDiff);
-        });
+        assertThrows(
+            IllegalArgumentException.class, () -> {
+                Formatter.getFormatter("unknown", testDiff);
+            }
+        );
     }
 }
