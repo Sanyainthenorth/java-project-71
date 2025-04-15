@@ -13,14 +13,19 @@ public class Plain {
 
             switch (status) {
                 case "added":
-                    result.append(String.format("Property '%s' was added with value: %s\n", key, formatValue(node.get("newValue"))));
+                    result.append(String.format(
+                        "Property '%s' was added with value: %s\n", key,
+                        formatValue(node.get("newValue"))
+                    ));
                     break;
                 case "removed":
                     result.append(String.format("Property '%s' was removed\n", key));
                     break;
                 case "changed":
-                    result.append(String.format("Property '%s' was updated. From %s to %s\n",
-                                                key, formatValue(node.get("oldValue")), formatValue(node.get("newValue"))));
+                    result.append(String.format(
+                        "Property '%s' was updated. From %s to %s\n",
+                        key, formatValue(node.get("oldValue")), formatValue(node.get("newValue"))
+                    ));
                     break;
                 case "unchanged":
                     break;
