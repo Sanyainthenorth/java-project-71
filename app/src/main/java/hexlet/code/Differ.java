@@ -1,5 +1,4 @@
 package hexlet.code;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,8 +33,9 @@ public class Differ {
 
         Map<String, Object> data1 = ReadParse.parse(content1, format1);
         Map<String, Object> data2 = ReadParse.parse(content2, format2);
+
         Map<String, Map<String, Object>> diff = buildDiff(data1, data2);
-        return Stylish.format(diff);
+        return Formatter.getFormatter(format, diff);
     }
 
     private static Map<String, Map<String, Object>> buildDiff(Map<String, Object> data1, Map<String, Object> data2) {
