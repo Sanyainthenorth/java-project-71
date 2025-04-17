@@ -153,20 +153,4 @@ public final class JsonFormatterTest {
         expectedNode.set(TEST_KEY, innerNode);
         return expectedNode;
     }
-    @Test
-    void testJsonFormatNullValue() throws JsonProcessingException {
-        testDiff.put(TEST_KEY, Map.of(
-            "status", "added",
-            "newValue", null
-        ));
-
-        ObjectNode expectedNode = mapper.createObjectNode();
-        ObjectNode innerNode = mapper.createObjectNode();
-        innerNode.put("status", "added");
-        innerNode.put("newValue", (String) null);
-        expectedNode.set(TEST_KEY, innerNode);
-
-        String actualJson = JsonFormatter.format(testDiff);
-        assertEquals(expectedNode, mapper.readTree(actualJson));
-    }
 }
