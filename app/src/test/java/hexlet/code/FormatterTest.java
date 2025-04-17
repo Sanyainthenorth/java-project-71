@@ -114,4 +114,14 @@ public final class FormatterTest {
             Formatter.getFormatter("unknown", testDiff);
         });
     }
+    @Test
+    void testStylishFormatNumberValue() {
+        testDiff.put("number", Map.of(
+            "status", "added",
+            "newValue", TEST_NUMBER  // Используем константу
+        ));
+        String expected = String.format("{%n  + number: %d%n}", TEST_NUMBER);
+        String actual = Formatter.getFormatter("stylish", testDiff);
+        assertEquals(expected, actual);
+    }
 }
