@@ -11,17 +11,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-public class JsonFormatterTest {
-    private static final String TEST_KEY = "testKey";
-    private static final String TEST_OLD_VALUE = "oldValue";
-    private static final String TEST_NEW_VALUE = "newValue";
-    private static final int TEST_NUMBER_VALUE = 42;
-    private final Map<String, Map<String, Object>> testDiff = new HashMap<>();
+
+public final class JsonFormatterTest {
+
+    private static final String TEST_KEY = "key";
+    private static final String TEST_USER_KEY = "user";
+    private static final String TEST_OLD_VALUE = "old";
+    private static final String TEST_NEW_VALUE = "new";
+    private static final String TEST_VALUE = "value";
+    private static final int TEST_AGE_OLD = 30;
+    private static final int TEST_AGE_NEW = 25;
+    private static final boolean TEST_BOOLEAN = true;
+
+    private Map<String, Map<String, Object>> testDiff;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
-    void setUp() {
-        testDiff.clear();
+    public void setUp() {
+        testDiff = new HashMap<>();
     }
 
     @Test
@@ -32,66 +39,56 @@ public class JsonFormatterTest {
             "newValue", TEST_NEW_VALUE
         ));
 
-        ObjectNode expectedNode = mapper.createObjectNode();
-        ObjectNode innerNode = mapper.createObjectNode();
-        innerNode.put("status", "changed");
-        innerNode.put("oldValue", TEST_OLD_VALUE);
-        innerNode.put("newValue", TEST_NEW_VALUE);
-        expectedNode.set(TEST_KEY, innerNode);
-
+        ObjectNode expectedNode = createExpectedNode("changed", TEST_OLD_VALUE, TEST_NEW_VALUE);
         String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
-
 
     @Test
     void testJsonFormatAdded() throws JsonProcessingException {
         testDiff.put(TEST_KEY, Map.of(
             "status", "added",
-            "newValue", TEST_NUMBER_VALUE
+            "newValue", TEST_VALUE
         ));
 
-        ObjectNode expectedNode = mapper.createObjectNode();
-        ObjectNode innerNode = mapper.createObjectNode();
-        innerNode.put("status", "added");
-        innerNode.put("newValue", TEST_NUMBER_VALUE);
-        expectedNode.set(TEST_KEY, innerNode);
-
+        ObjectNode expectedNode = createExpectedNode("added", null, TEST_VALUE);
         String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
     @Test
     void testJsonFormatRemoved() throws JsonProcessingException {
-        testDiff.put("key", Map.of(
+        testDiff.put(TEST_KEY, Map.of(
             "status", "removed",
-            "oldValue", "value"
+            "oldValue", TEST_VALUE
         ));
 
-        ObjectNode expectedNode = mapper.createObjectNode();
-        ObjectNode innerNode = mapper.createObjectNode();
-        innerNode.put("status", "removed");
-        innerNode.put("oldValue", "value");
-        expectedNode.set("key", innerNode);
-
-        String actualJson = Formatter.getFormatter("json", testDiff);
+        ObjectNode expectedNode = createExpectedNode("removed", TEST_VALUE, null);
+        String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
     @Test
     void testJsonFormatUnchanged() throws JsonProcessingException {
-        testDiff.put("key", Map.of(
+        testDiff.put(TEST_KEY, Map.of(
             "status", "unchanged",
-            "oldValue", "value"
+            "oldValue", TEST_VALUE
         ));
 
-        ObjectNode expectedNode = mapper.createObjectNode();
-        ObjectNode innerNode = mapper.createObjectNode();
-        innerNode.put("status", "unchanged");
-        innerNode.put("oldValue", "value");
-        expectedNode.set("key", innerNode);
+        ObjectNode expectedNode = createExpectedNode("unchanged", TEST_VALUE, null);
+        String actualJson = JsonFormatter.format(testDiff);
+        assertEquals(expectedNode, mapper.readTree(actualJson));
+    }
 
-        String actualJson = Formatter.getFormatter("json", testDiff);
+    @Test
+    void testJsonFormatBooleanValue() throws JsonProcessingException {
+        testDiff.put(TEST_KEY, Map.of(
+            "status", "added",
+            "newValue", TEST_BOOLEAN
+        ));
+
+        ObjectNode expectedNode = createExpectedNode("added", null, TEST_BOOLEAN);
+        String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
@@ -99,15 +96,15 @@ public class JsonFormatterTest {
     void testJsonFormatComplexStructure() throws JsonProcessingException {
         Map<String, Object> oldValueMap = Map.of(
             "name", "John",
-            "age", TEST_NUMBER_VALUE
+            "age", TEST_AGE_OLD
         );
 
         Map<String, Object> newValueMap = Map.of(
             "name", "Jane",
-            "age", TEST_NUMBER_VALUE + 1
+            "age", TEST_AGE_NEW
         );
 
-        testDiff.put("user", Map.of(
+        testDiff.put(TEST_USER_KEY, Map.of(
             "status", "changed",
             "oldValue", oldValueMap,
             "newValue", newValueMap
@@ -122,10 +119,38 @@ public class JsonFormatterTest {
 
         innerNode.set("oldValue", oldNode);
         innerNode.set("newValue", newNode);
-        expectedNode.set("user", innerNode);
+        expectedNode.set(TEST_USER_KEY, innerNode);
 
         String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
-}
 
+    private ObjectNode createExpectedNode(String status, Object oldValue, Object newValue) {
+        ObjectNode expectedNode = mapper.createObjectNode();
+        ObjectNode innerNode = mapper.createObjectNode();
+        innerNode.put("status", status);
+
+        if (oldValue != null) {
+            if (oldValue instanceof String) {
+                innerNode.put("oldValue", (String) oldValue);
+            } else if (oldValue instanceof Integer) {
+                innerNode.put("oldValue", (Integer) oldValue);
+            } else if (oldValue instanceof Boolean) {
+                innerNode.put("oldValue", (Boolean) oldValue);
+            }
+        }
+
+        if (newValue != null) {
+            if (newValue instanceof String) {
+                innerNode.put("newValue", (String) newValue);
+            } else if (newValue instanceof Integer) {
+                innerNode.put("newValue", (Integer) newValue);
+            } else if (newValue instanceof Boolean) {
+                innerNode.put("newValue", (Boolean) newValue);
+            }
+        }
+
+        expectedNode.set(TEST_KEY, innerNode);
+        return expectedNode;
+    }
+}

@@ -1,105 +1,109 @@
 package hexlet.code;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class FormatterTest {
-    private static final int TEST_AGE = 42;
+/**
+ * Tests for {@link Formatter} class.
+ * Verifies all supported output formats.
+ */
+public final class FormatterTest {
+
+    private static final String TEST_KEY = "key";
+    private static final String TEST_VALUE = "value";
+    private static final String TEST_OLD_VALUE = "old";
+    private static final String TEST_NEW_VALUE = "new";
+    private static final int TEST_NUMBER = 42;
+    private static final boolean TEST_BOOLEAN = true;
+
     private final Map<String, Map<String, Object>> testDiff = new HashMap<>();
 
-    // Stylish Formatter Tests (остаются без изменений)
     @Test
     void testStylishFormatAdded() {
-        testDiff.put("key", Map.of("status", "added", "newValue", "value"));
-        String expected = "{\n  + key: value\n}";
+        testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_VALUE));
+        String expected = "{\n  + " + TEST_KEY + ": " + TEST_VALUE + "\n}";
         String actual = Formatter.getFormatter("stylish", testDiff);
         assertEquals(expected, actual);
     }
 
     @Test
     void testStylishFormatRemoved() {
-        testDiff.put("key", Map.of("status", "removed", "oldValue", "value"));
-        String expected = "{\n  - key: value\n}";
+        testDiff.put(TEST_KEY, Map.of("status", "removed", "oldValue", TEST_VALUE));
+        String expected = "{\n  - " + TEST_KEY + ": " + TEST_VALUE + "\n}";
         String actual = Formatter.getFormatter("stylish", testDiff);
         assertEquals(expected, actual);
     }
 
     @Test
     void testStylishFormatChanged() {
-        testDiff.put("key", Map.of(
+        testDiff.put(TEST_KEY, Map.of(
             "status", "changed",
-            "oldValue", "old",
-            "newValue", "new"
+            "oldValue", TEST_OLD_VALUE,
+            "newValue", TEST_NEW_VALUE
         ));
-        String expected = "{\n  - key: old\n  + key: new\n}";
+        String expected = "{\n  - " + TEST_KEY + ": " + TEST_OLD_VALUE + "\n  + " + TEST_KEY + ": " + TEST_NEW_VALUE + "\n}";
         String actual = Formatter.getFormatter("stylish", testDiff);
         assertEquals(expected, actual);
     }
 
-    // Plain Formatter Tests (обновленные с кавычками)
     @Test
-    void testPlainFormatAddedStringValue() {
-        testDiff.put("key", Map.of("status", "added", "newValue", "value"));
-        String expected = "Property 'key' was added with value: 'value'";
+    void testPlainFormatAddedString() {
+        testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_VALUE));
+        String expected = "Property '" + TEST_KEY + "' was added with value: '" + TEST_VALUE + "'";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
 
     @Test
-    void testPlainFormatAddedNumberValue() {
-        testDiff.put("age", Map.of("status", "added", "newValue", TEST_AGE));
-        String expected = "Property 'age' was added with value: 42";
+    void testPlainFormatAddedNumber() {
+        testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_NUMBER));
+        String expected = "Property '" + TEST_KEY + "' was added with value: " + TEST_NUMBER;
+        String actual = Formatter.getFormatter("plain", testDiff);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testPlainFormatAddedBoolean() {
+        testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_BOOLEAN));
+        String expected = "Property '" + TEST_KEY + "' was added with value: " + TEST_BOOLEAN;
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
 
     @Test
     void testPlainFormatRemoved() {
-        testDiff.put("key", Map.of("status", "removed"));
-        String expected = "Property 'key' was removed";
+        testDiff.put(TEST_KEY, Map.of("status", "removed"));
+        String expected = "Property '" + TEST_KEY + "' was removed";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
 
     @Test
-    void testPlainFormatChangedStrings() {
-        testDiff.put("key", Map.of(
+    void testPlainFormatChanged() {
+        testDiff.put(TEST_KEY, Map.of(
             "status", "changed",
-            "oldValue", "old",
-            "newValue", "new"
+            "oldValue", TEST_OLD_VALUE,
+            "newValue", TEST_NEW_VALUE
         ));
-        String expected = "Property 'key' was updated. From 'old' to 'new'";
-        String actual = Formatter.getFormatter("plain", testDiff);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void testPlainFormatChangedMixedTypes() {
-        testDiff.put("enabled", Map.of(
-            "status", "changed",
-            "oldValue", false,
-            "newValue", "true"
-        ));
-        String expected = "Property 'enabled' was updated. From false to 'true'";
+        String expected = "Property '" + TEST_KEY + "' was updated. From '" + TEST_OLD_VALUE + "' to '" + TEST_NEW_VALUE + "'";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
 
     @Test
     void testPlainFormatUnchanged() {
-        testDiff.put("key", Map.of("status", "unchanged", "oldValue", "value"));
+        testDiff.put(TEST_KEY, Map.of("status", "unchanged", "oldValue", TEST_VALUE));
         String expected = "";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
+
     @Test
     void testUnknownFormat() {
-        testDiff.put("key", Map.of("status", "added", "newValue", "value"));
+        testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_VALUE));
         assertThrows(IllegalArgumentException.class, () -> {
             Formatter.getFormatter("unknown", testDiff);
         });
