@@ -44,7 +44,10 @@ public final class FormatterTest {
             "oldValue", TEST_OLD_VALUE,
             "newValue", TEST_NEW_VALUE
         ));
-        String expected = "{\n  - " + TEST_KEY + ": " + TEST_OLD_VALUE + "\n  + " + TEST_KEY + ": " + TEST_NEW_VALUE + "\n}";
+        String expected = String.format(
+            "{%n  - %s: %s%n  + %s: %s%n}",
+            TEST_KEY, TEST_OLD_VALUE, TEST_KEY, TEST_NEW_VALUE
+        );
         String actual = Formatter.getFormatter("stylish", testDiff);
         assertEquals(expected, actual);
     }
@@ -88,7 +91,10 @@ public final class FormatterTest {
             "oldValue", TEST_OLD_VALUE,
             "newValue", TEST_NEW_VALUE
         ));
-        String expected = "Property '" + TEST_KEY + "' was updated. From '" + TEST_OLD_VALUE + "' to '" + TEST_NEW_VALUE + "'";
+        String expected = String.format(
+            "Property '%s' was updated. From '%s' to '%s'",
+            TEST_KEY, TEST_OLD_VALUE, TEST_NEW_VALUE
+        );
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
