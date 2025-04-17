@@ -12,6 +12,7 @@ class FormatterTest {
 
     private final Map<String, Map<String, Object>> testDiff = new HashMap<>();
 
+    // Stylish Formatter Tests (остаются без изменений)
     @Test
     void testStylishFormatAdded() {
         testDiff.put("key", Map.of("status", "added", "newValue", "value"));
@@ -30,22 +31,29 @@ class FormatterTest {
 
     @Test
     void testStylishFormatChanged() {
-        testDiff.put(
-            "key", Map.of(
-                "status", "changed",
-                "oldValue", "old",
-                "newValue", "new"
-            )
-        );
+        testDiff.put("key", Map.of(
+            "status", "changed",
+            "oldValue", "old",
+            "newValue", "new"
+        ));
         String expected = "{\n  - key: old\n  + key: new\n}";
         String actual = Formatter.getFormatter("stylish", testDiff);
         assertEquals(expected, actual);
     }
 
+    // Plain Formatter Tests (обновленные с кавычками)
     @Test
-    void testPlainFormatAdded() {
+    void testPlainFormatAddedStringValue() {
         testDiff.put("key", Map.of("status", "added", "newValue", "value"));
-        String expected = "Property 'key' was added with value: value";
+        String expected = "Property 'key' was added with value: 'value'";
+        String actual = Formatter.getFormatter("plain", testDiff);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testPlainFormatAddedNumberValue() {
+        testDiff.put("age", Map.of("status", "added", "newValue", 42));
+        String expected = "Property 'age' was added with value: 42";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
@@ -59,15 +67,25 @@ class FormatterTest {
     }
 
     @Test
-    void testPlainFormatChanged() {
-        testDiff.put(
-            "key", Map.of(
-                "status", "changed",
-                "oldValue", "old",
-                "newValue", "new"
-            )
-        );
-        String expected = "Property 'key' was updated. From old to new";
+    void testPlainFormatChangedStrings() {
+        testDiff.put("key", Map.of(
+            "status", "changed",
+            "oldValue", "old",
+            "newValue", "new"
+        ));
+        String expected = "Property 'key' was updated. From 'old' to 'new'";
+        String actual = Formatter.getFormatter("plain", testDiff);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testPlainFormatChangedMixedTypes() {
+        testDiff.put("enabled", Map.of(
+            "status", "changed",
+            "oldValue", false,
+            "newValue", "true"
+        ));
+        String expected = "Property 'enabled' was updated. From false to 'true'";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
@@ -79,14 +97,11 @@ class FormatterTest {
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
     }
-
     @Test
     void testUnknownFormat() {
         testDiff.put("key", Map.of("status", "added", "newValue", "value"));
-        assertThrows(
-            IllegalArgumentException.class, () -> {
-                Formatter.getFormatter("unknown", testDiff);
-            }
-        );
+        assertThrows(IllegalArgumentException.class, () -> {
+            Formatter.getFormatter("unknown", testDiff);
+        });
     }
 }
