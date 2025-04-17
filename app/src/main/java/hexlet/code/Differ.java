@@ -29,6 +29,9 @@ public class Differ {
         Map<String, Map<String, Object>> diff = buildDiff(data1, data2);
         return Formatter.getFormatter(format, diff);
     }
+    public static String generate(String filepath1, String filepath2) throws Exception {
+        return generate(filepath1, filepath2, "stylish");
+    }
 
     private static Map<String, Map<String, Object>> buildDiff(Map<String, Object> data1, Map<String, Object> data2) {
         Set<String> allKeys = new TreeSet<>();

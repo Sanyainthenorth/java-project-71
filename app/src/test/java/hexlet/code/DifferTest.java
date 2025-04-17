@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 class DifferTest {
@@ -51,5 +52,10 @@ class DifferTest {
 
         String expectedMessage = "Unknown file format";
         assertTrue(exception.getMessage().contains(expectedMessage));
+    }
+    @Test
+    void testDefaultFormat() throws Exception {
+        String result = Differ.generate("file1.json", "file2.json");
+        assertFalse(result.isEmpty());
     }
 }
