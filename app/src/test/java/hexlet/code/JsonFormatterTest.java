@@ -3,6 +3,7 @@ package hexlet.code;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import hexlet.code.formatters.JsonFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,10 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JsonFormatterTest {
+    private static final String TEST_KEY = "testKey";
+    private static final String TEST_OLD_VALUE = "oldValue";
+    private static final String TEST_NEW_VALUE = "newValue";
+    private static final int TEST_NUMBER_VALUE = 42;
     private final Map<String, Map<String, Object>> testDiff = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -21,38 +26,38 @@ public class JsonFormatterTest {
 
     @Test
     void testJsonFormatChanged() throws JsonProcessingException {
-        testDiff.put("key", Map.of(
+        testDiff.put(TEST_KEY, Map.of(
             "status", "changed",
-            "oldValue", "old",
-            "newValue", "new"
+            "oldValue", TEST_OLD_VALUE,
+            "newValue", TEST_NEW_VALUE
         ));
 
-        // Ожидаемый результат как ObjectNode
         ObjectNode expectedNode = mapper.createObjectNode();
         ObjectNode innerNode = mapper.createObjectNode();
         innerNode.put("status", "changed");
-        innerNode.put("oldValue", "old");
-        innerNode.put("newValue", "new");
-        expectedNode.set("key", innerNode);
+        innerNode.put("oldValue", TEST_OLD_VALUE);
+        innerNode.put("newValue", TEST_NEW_VALUE);
+        expectedNode.set(TEST_KEY, innerNode);
 
-        String actualJson = Formatter.getFormatter("json", testDiff);
+        String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
+
     @Test
     void testJsonFormatAdded() throws JsonProcessingException {
-        testDiff.put("key", Map.of(
+        testDiff.put(TEST_KEY, Map.of(
             "status", "added",
-            "newValue", "value"
+            "newValue", TEST_NUMBER_VALUE
         ));
 
         ObjectNode expectedNode = mapper.createObjectNode();
         ObjectNode innerNode = mapper.createObjectNode();
         innerNode.put("status", "added");
-        innerNode.put("newValue", "value");
-        expectedNode.set("key", innerNode);
+        innerNode.put("newValue", TEST_NUMBER_VALUE);
+        expectedNode.set(TEST_KEY, innerNode);
 
-        String actualJson = Formatter.getFormatter("json", testDiff);
+        String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
@@ -92,29 +97,34 @@ public class JsonFormatterTest {
 
     @Test
     void testJsonFormatComplexStructure() throws JsonProcessingException {
+        Map<String, Object> oldValueMap = Map.of(
+            "name", "John",
+            "age", TEST_NUMBER_VALUE
+        );
+
+        Map<String, Object> newValueMap = Map.of(
+            "name", "Jane",
+            "age", TEST_NUMBER_VALUE + 1
+        );
+
         testDiff.put("user", Map.of(
             "status", "changed",
-            "oldValue", Map.of("name", "John", "age", 30),
-            "newValue", Map.of("name", "Jane", "age", 25)
+            "oldValue", oldValueMap,
+            "newValue", newValueMap
         ));
 
         ObjectNode expectedNode = mapper.createObjectNode();
         ObjectNode innerNode = mapper.createObjectNode();
         innerNode.put("status", "changed");
 
-        ObjectNode oldValueNode = mapper.createObjectNode();
-        oldValueNode.put("name", "John");
-        oldValueNode.put("age", 30);
-        innerNode.set("oldValue", oldValueNode);
+        ObjectNode oldNode = mapper.valueToTree(oldValueMap);
+        ObjectNode newNode = mapper.valueToTree(newValueMap);
 
-        ObjectNode newValueNode = mapper.createObjectNode();
-        newValueNode.put("name", "Jane");
-        newValueNode.put("age", 25);
-        innerNode.set("newValue", newValueNode);
-
+        innerNode.set("oldValue", oldNode);
+        innerNode.set("newValue", newNode);
         expectedNode.set("user", innerNode);
 
-        String actualJson = Formatter.getFormatter("json", testDiff);
+        String actualJson = JsonFormatter.format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 }

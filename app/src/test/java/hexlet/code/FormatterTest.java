@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FormatterTest {
-
+    private static final int TEST_AGE = 42;
     private final Map<String, Map<String, Object>> testDiff = new HashMap<>();
 
     // Stylish Formatter Tests (остаются без изменений)
@@ -52,7 +52,7 @@ class FormatterTest {
 
     @Test
     void testPlainFormatAddedNumberValue() {
-        testDiff.put("age", Map.of("status", "added", "newValue", 42));
+        testDiff.put("age", Map.of("status", "added", "newValue", TEST_AGE));
         String expected = "Property 'age' was added with value: 42";
         String actual = Formatter.getFormatter("plain", testDiff);
         assertEquals(expected, actual);
