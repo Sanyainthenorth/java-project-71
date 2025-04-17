@@ -14,22 +14,14 @@ public class Differ {
         if (filepath.endsWith(".yaml") || filepath.endsWith(".yml")) {
             return "yaml";
         }
-        if (filepath.endsWith(".txt")) {
-            return "txt";
-        }
         throw new IllegalArgumentException("Unknown file format");
     }
     public static String generate(String filepath1, String filepath2, String format) throws Exception {
-
-        String content1 = ReadParse.readFile(filepath1);
-        String content2 = ReadParse.readFile(filepath2);
-
         String format1 = getFormat(filepath1);
         String format2 = getFormat(filepath2);
 
-        if (format1.equals("txt") || format2.equals("txt")) {
-            throw new IllegalArgumentException("Cannot compare .txt file with YAML or JSON");
-        }
+        String content1 = ReadParse.readFile(filepath1);
+        String content2 = ReadParse.readFile(filepath2);
 
         Map<String, Object> data1 = ReadParse.parse(content1, format1);
         Map<String, Object> data2 = ReadParse.parse(content2, format2);

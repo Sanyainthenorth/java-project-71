@@ -49,7 +49,7 @@ class DifferTest {
             Differ.generate("file1.txt", "file2.yaml", "stylish");
         });
 
-        String expectedMessage = "Cannot compare .txt file with YAML or JSON";
+        String expectedMessage = "Unknown file format";
         assertTrue(exception.getMessage().contains(expectedMessage));
     }
 }
