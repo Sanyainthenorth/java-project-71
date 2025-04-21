@@ -1,9 +1,10 @@
 package hexlet.code;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import java.io.FileNotFoundException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,9 +14,6 @@ public class ReadParse {
     public static String readFile(String filepath) throws Exception {
 
         Path path = Paths.get(filepath).toAbsolutePath().normalize();
-        if (!Files.exists(path)) {
-            throw new FileNotFoundException("File not found: " + path);
-        }
         return Files.readString(path);
     }
 
@@ -32,7 +30,7 @@ public class ReadParse {
             throw new IllegalArgumentException("File content is empty");
         }
         ObjectMapper mapper = getMapper(format);
-        return mapper.readValue(content, new TypeReference<Map<String, Object>>() { });
+        return mapper.readValue(content.trim(), new TypeReference<Map<String, Object>>() { });
     }
 }
 
