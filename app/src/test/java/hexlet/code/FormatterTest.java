@@ -6,10 +6,6 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Tests for {@link FormatterFactory} class.
- * Verifies all supported output formats.
- */
 public final class FormatterTest {
 
     private static final String TEST_KEY = "key";
@@ -25,7 +21,7 @@ public final class FormatterTest {
     void testStylishFormatAdded() {
         testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_VALUE));
         String expected = "{\n  + " + TEST_KEY + ": " + TEST_VALUE + "\n}";
-        String actual = FormatterFactory.getFormatter("stylish", testDiff);
+        String actual = FormatterFactory.getFormatter("stylish").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -33,7 +29,7 @@ public final class FormatterTest {
     void testStylishFormatRemoved() {
         testDiff.put(TEST_KEY, Map.of("status", "removed", "oldValue", TEST_VALUE));
         String expected = "{\n  - " + TEST_KEY + ": " + TEST_VALUE + "\n}";
-        String actual = FormatterFactory.getFormatter("stylish", testDiff);
+        String actual = FormatterFactory.getFormatter("stylish").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -48,7 +44,7 @@ public final class FormatterTest {
             "{%n  - %s: %s%n  + %s: %s%n}",
             TEST_KEY, TEST_OLD_VALUE, TEST_KEY, TEST_NEW_VALUE
         );
-        String actual = FormatterFactory.getFormatter("stylish", testDiff);
+        String actual = FormatterFactory.getFormatter("stylish").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -56,7 +52,7 @@ public final class FormatterTest {
     void testPlainFormatAddedString() {
         testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_VALUE));
         String expected = "Property '" + TEST_KEY + "' was added with value: '" + TEST_VALUE + "'";
-        String actual = FormatterFactory.getFormatter("plain", testDiff);
+        String actual = FormatterFactory.getFormatter("plain").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -64,7 +60,7 @@ public final class FormatterTest {
     void testPlainFormatAddedNumber() {
         testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_NUMBER));
         String expected = "Property '" + TEST_KEY + "' was added with value: " + TEST_NUMBER;
-        String actual = FormatterFactory.getFormatter("plain", testDiff);
+        String actual = FormatterFactory.getFormatter("plain").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -72,7 +68,7 @@ public final class FormatterTest {
     void testPlainFormatAddedBoolean() {
         testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_BOOLEAN));
         String expected = "Property '" + TEST_KEY + "' was added with value: " + TEST_BOOLEAN;
-        String actual = FormatterFactory.getFormatter("plain", testDiff);
+        String actual = FormatterFactory.getFormatter("plain").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -80,7 +76,7 @@ public final class FormatterTest {
     void testPlainFormatRemoved() {
         testDiff.put(TEST_KEY, Map.of("status", "removed"));
         String expected = "Property '" + TEST_KEY + "' was removed";
-        String actual = FormatterFactory.getFormatter("plain", testDiff);
+        String actual = FormatterFactory.getFormatter("plain").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -95,7 +91,7 @@ public final class FormatterTest {
             "Property '%s' was updated. From '%s' to '%s'",
             TEST_KEY, TEST_OLD_VALUE, TEST_NEW_VALUE
         );
-        String actual = FormatterFactory.getFormatter("plain", testDiff);
+        String actual = FormatterFactory.getFormatter("plain").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -103,7 +99,7 @@ public final class FormatterTest {
     void testPlainFormatUnchanged() {
         testDiff.put(TEST_KEY, Map.of("status", "unchanged", "oldValue", TEST_VALUE));
         String expected = "";
-        String actual = FormatterFactory.getFormatter("plain", testDiff);
+        String actual = FormatterFactory.getFormatter("plain").format(testDiff);
         assertEquals(expected, actual);
     }
 
@@ -111,7 +107,7 @@ public final class FormatterTest {
     void testUnknownFormat() {
         testDiff.put(TEST_KEY, Map.of("status", "added", "newValue", TEST_VALUE));
         assertThrows(IllegalArgumentException.class, () -> {
-            FormatterFactory.getFormatter("unknown", testDiff);
+            FormatterFactory.getFormatter("unknown").format(testDiff);
         });
     }
     @Test
@@ -121,7 +117,7 @@ public final class FormatterTest {
             "newValue", TEST_NUMBER  // Используем константу
         ));
         String expected = String.format("{%n  + number: %d%n}", TEST_NUMBER);
-        String actual = FormatterFactory.getFormatter("stylish", testDiff);
+        String actual = FormatterFactory.getFormatter("stylish").format(testDiff);
         assertEquals(expected, actual);
     }
 }

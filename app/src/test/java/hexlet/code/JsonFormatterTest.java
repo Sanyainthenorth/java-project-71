@@ -3,7 +3,6 @@ package hexlet.code;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import hexlet.code.formatters.JsonFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ public final class JsonFormatterTest {
         ));
 
         ObjectNode expectedNode = createExpectedNode("changed", TEST_OLD_VALUE, TEST_NEW_VALUE);
-        String actualJson = JsonFormatter.format(testDiff);
+        String actualJson = FormatterFactory.getFormatter("json").format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
@@ -52,7 +51,7 @@ public final class JsonFormatterTest {
         ));
 
         ObjectNode expectedNode = createExpectedNode("added", null, TEST_VALUE);
-        String actualJson = JsonFormatter.format(testDiff);
+        String actualJson = FormatterFactory.getFormatter("json").format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
@@ -64,7 +63,7 @@ public final class JsonFormatterTest {
         ));
 
         ObjectNode expectedNode = createExpectedNode("removed", TEST_VALUE, null);
-        String actualJson = JsonFormatter.format(testDiff);
+        String actualJson = FormatterFactory.getFormatter("json").format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
@@ -76,7 +75,7 @@ public final class JsonFormatterTest {
         ));
 
         ObjectNode expectedNode = createExpectedNode("unchanged", TEST_VALUE, null);
-        String actualJson = JsonFormatter.format(testDiff);
+        String actualJson = FormatterFactory.getFormatter("json").format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
@@ -88,7 +87,7 @@ public final class JsonFormatterTest {
         ));
 
         ObjectNode expectedNode = createExpectedNode("added", null, TEST_BOOLEAN);
-        String actualJson = JsonFormatter.format(testDiff);
+        String actualJson = FormatterFactory.getFormatter("json").format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
@@ -121,7 +120,7 @@ public final class JsonFormatterTest {
         innerNode.set("newValue", newNode);
         expectedNode.set(TEST_USER_KEY, innerNode);
 
-        String actualJson = JsonFormatter.format(testDiff);
+        String actualJson = FormatterFactory.getFormatter("json").format(testDiff);
         assertEquals(expectedNode, mapper.readTree(actualJson));
     }
 
