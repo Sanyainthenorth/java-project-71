@@ -2,8 +2,9 @@ package hexlet.code.formatters;
 
 import java.util.Map;
 
-public class Plain {
-    public static String format(Map<String, Map<String, Object>> diff) {
+public class PlainFormatter implements Formatter {
+    @Override
+    public String format(Map<String, Map<String, Object>> diff) {
         StringBuilder result = new StringBuilder();
 
         for (Map.Entry<String, Map<String, Object>> entry : diff.entrySet()) {

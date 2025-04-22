@@ -5,10 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
-public class JsonFormatter {
+public class JsonFormatter implements Formatter {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public static String format(Map<String, Map<String, Object>> diff) throws JsonProcessingException {
-        return OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(diff);
+    @Override
+    public String format(Map<String, Map<String, Object>> diff) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(diff);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JSON formatting error", e);
+        }
     }
 }

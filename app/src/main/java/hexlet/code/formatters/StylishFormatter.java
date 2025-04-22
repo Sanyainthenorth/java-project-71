@@ -2,8 +2,9 @@ package hexlet.code.formatters;
 import java.util.Collection;
 import java.util.Map;
 
-public class Stylish {
-    public static String format(Map<String, Map<String, Object>> diff) {
+public class StylishFormatter implements Formatter {
+    @Override
+    public String format(Map<String, Map<String, Object>> diff) {
         StringBuilder result = new StringBuilder("{\n");
 
         for (var entry : diff.entrySet()) {

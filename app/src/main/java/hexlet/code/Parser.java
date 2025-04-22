@@ -5,18 +5,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
-public class ReadParse {
-    public static String readFile(String filepath) throws Exception {
-
-        Path path = Paths.get(filepath).toAbsolutePath().normalize();
-        return Files.readString(path);
-    }
-
+public class Parser {
     private static ObjectMapper getMapper(String format) {
         return switch (format.toLowerCase()) {
             case "json" -> new ObjectMapper();
