@@ -17,7 +17,8 @@ public class Differ {
 
         Map<String, Map<String, Object>> diff = DiffBuilder.build(data1, data2);
         Formatter formatter = FormatterFactory.getFormatter(format);
-        return formatter.format(diff);
+        String formattedDiff = formatter.format(diff);
+        return formattedDiff;
     }
     public static String generate(String filepath1, String filepath2) throws Exception {
         return generate(filepath1, filepath2, "stylish");

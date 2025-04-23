@@ -6,14 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 public class JsonFormatter implements Formatter {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
     @Override
     public String format(Map<String, Map<String, Object>> diff) {
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            return OBJECT_MAPPER.writeValueAsString(diff);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(diff);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("JSON formatting error", e);
+            throw new RuntimeException("Error formatting JSON", e);
         }
     }
 }

@@ -1,4 +1,5 @@
 package hexlet.code.formatters;
+
 import java.util.Collection;
 import java.util.Map;
 

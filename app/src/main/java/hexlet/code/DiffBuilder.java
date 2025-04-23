@@ -20,17 +20,17 @@ public class DiffBuilder {
 
             if (!data1.containsKey(key)) {
                 node.put("status", "added");
-                node.put("value", data2.get(key));
+                node.put("newValue", data2.get(key));
             } else if (!data2.containsKey(key)) {
                 node.put("status", "removed");
-                node.put("value", data1.get(key));
+                node.put("oldValue", data1.get(key));
             } else if (!Objects.equals(data1.get(key), data2.get(key))) {
                 node.put("status", "changed");
                 node.put("oldValue", data1.get(key));
                 node.put("newValue", data2.get(key));
             } else {
                 node.put("status", "unchanged");
-                node.put("value", data1.get(key));
+                node.put("oldValue", data1.get(key));
             }
 
             result.put(key, node);

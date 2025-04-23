@@ -21,7 +21,7 @@ public class Parser {
             throw new IllegalArgumentException("File content is empty");
         }
         ObjectMapper mapper = getMapper(format);
-        return mapper.readValue(content.trim(), new TypeReference<Map<String, Object>>() { });
+        return mapper.readValue(content, new TypeReference<Map<String, Object>>() { });
     }
 }
 
