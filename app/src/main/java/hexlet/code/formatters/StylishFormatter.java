@@ -3,7 +3,7 @@ package hexlet.code.formatters;
 import java.util.Collection;
 import java.util.Map;
 
-public class StylishFormatter implements Formatter {
+public final class StylishFormatter implements Formatter {
     @Override
     public String format(Map<String, Map<String, Object>> diff) {
         StringBuilder result = new StringBuilder("{\n");

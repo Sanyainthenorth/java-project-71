@@ -2,7 +2,7 @@ package hexlet.code.formatters;
 
 import java.util.Map;
 
-public class PlainFormatter implements Formatter {
+public final class PlainFormatter implements Formatter {
     @Override
     public String format(Map<String, Map<String, Object>> diff) {
         StringBuilder result = new StringBuilder();

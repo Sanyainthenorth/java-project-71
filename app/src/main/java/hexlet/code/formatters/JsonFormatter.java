@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
-public class JsonFormatter implements Formatter {
+public final class JsonFormatter implements Formatter {
     @Override
     public String format(Map<String, Map<String, Object>> diff) {
         ObjectMapper mapper = new ObjectMapper();
