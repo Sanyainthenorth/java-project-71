@@ -3,12 +3,12 @@ package hexlet.code;
 import java.util.Comparator;
 
 public final class DiffEntry {
-    private String status;    // Статус (added, removed, changed, unchanged)
-    private Object oldValue;  // Старое значение
-    private Object newValue;  // Новое значение
-    private String key;       // Ключ из внешней мапы
+    private DiffStatus status;    // Статус (added, removed, changed, unchanged)
+    private Object oldValue;
+    private Object newValue;
+    private String key;
 
-    public DiffEntry(String status, Object oldValue, Object newValue, String key) {
+    public DiffEntry(DiffStatus status, Object oldValue, Object newValue, String key) {
         this.status = status;
         this.oldValue = oldValue;
         this.newValue = newValue;
@@ -16,11 +16,12 @@ public final class DiffEntry {
     }
     private static final Comparator<DiffEntry> KEY_COMPARATOR = Comparator.comparing(DiffEntry::getKey);
     // Геттеры и сеттеры
-    public String getStatus() {
+    public DiffStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+
+    public void setStatus(DiffStatus status) {
         this.status = status;
     }
 
@@ -51,7 +52,7 @@ public final class DiffEntry {
     @Override
     public String toString() {
         return "DiffEntry{"
-            + "status='" + status + '\''
+            + "status='" + status.getValue() + '\''
             + ", oldValue=" + oldValue
             + ", newValue=" + newValue
             + ", key='" + key + '\''

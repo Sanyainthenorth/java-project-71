@@ -1,6 +1,7 @@
 package hexlet.code.formatters;
 
 import hexlet.code.DiffEntry;
+import hexlet.code.DiffStatus;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,20 +14,20 @@ public final class StylishFormatter implements Formatter {
 
         for (DiffEntry entry : diffEntries) {
             String key = entry.getKey();
-            String status = entry.getStatus();
+            DiffStatus status = entry.getStatus();
 
             switch (status) {
-                case "added" -> result.append("  + ").append(key).append(": ")
+                case ADDED -> result.append("  + ").append(key).append(": ")
                                       .append(formatValue(entry.getNewValue())).append("\n");
-                case "removed" -> result.append("  - ").append(key).append(": ")
+                case REMOVED -> result.append("  - ").append(key).append(": ")
                                         .append(formatValue(entry.getOldValue())).append("\n");
-                case "changed" -> {
+                case CHANGED -> {
                     result.append("  - ").append(key).append(": ")
                           .append(formatValue(entry.getOldValue())).append("\n");
                     result.append("  + ").append(key).append(": ")
                           .append(formatValue(entry.getNewValue())).append("\n");
                 }
-                case "unchanged" -> result.append("    ").append(key).append(": ")
+                case UNCHANGED -> result.append("    ").append(key).append(": ")
                                           .append(formatValue(entry.getOldValue())).append("\n");
                 default -> throw new IllegalArgumentException("Неизвестный статус: " + status);
             }

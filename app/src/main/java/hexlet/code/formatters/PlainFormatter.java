@@ -1,6 +1,7 @@
 package hexlet.code.formatters;
 
 import hexlet.code.DiffEntry;
+import hexlet.code.DiffStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -12,25 +13,25 @@ public final class PlainFormatter implements Formatter {
 
         for (DiffEntry entry : diffEntries) {
             String key = entry.getKey();
-            String status = entry.getStatus();
+            DiffStatus status = entry.getStatus();
 
             switch (status) {
-                case "added":
+                case ADDED:
                     result.append(String.format(
                         "Property '%s' was added with value: %s\n",
                         key, formatValue(entry.getNewValue())
                     ));
                     break;
-                case "removed":
+                case REMOVED:
                     result.append(String.format("Property '%s' was removed\n", key));
                     break;
-                case "changed":
+                case CHANGED:
                     result.append(String.format(
                         "Property '%s' was updated. From %s to %s\n",
                         key, formatValue(entry.getOldValue()), formatValue(entry.getNewValue())
                     ));
                     break;
-                case "unchanged":
+                case UNCHANGED:
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown status: " + status);
