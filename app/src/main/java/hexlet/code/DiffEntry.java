@@ -14,7 +14,7 @@ public final class DiffEntry {
         this.newValue = newValue;
         this.key = key;
     }
-    private static final Comparator<DiffEntry> keyComparator = Comparator.comparing(DiffEntry::getKey);
+    private static final Comparator<DiffEntry> KEY_COMPARATOR = Comparator.comparing(DiffEntry::getKey);
     // Геттеры и сеттеры
     public String getStatus() {
         return status;
@@ -59,6 +59,6 @@ public final class DiffEntry {
     }
 
     public static Comparator<DiffEntry> getKeyComparator() {
-        return keyComparator;
+        return KEY_COMPARATOR;
     }
 }

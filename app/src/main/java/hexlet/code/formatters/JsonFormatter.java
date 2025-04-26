@@ -20,7 +20,6 @@ public final class JsonFormatter implements Formatter {
             for (DiffEntry entry : diffEntries) {
                 Map<String, Object> entryMap = new LinkedHashMap<>();
                 String status = entry.getStatus();
-                
                 if ("unchanged".equals(status)) {
                     entryMap.put("oldValue", entry.getOldValue());
                 } else if ("removed".equals(status)) {
