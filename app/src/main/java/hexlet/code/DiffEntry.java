@@ -2,7 +2,7 @@ package hexlet.code;
 
 import java.util.Comparator;
 
-public class DiffEntry {
+public final class DiffEntry {
     private String status;    // Статус (added, removed, changed, unchanged)
     private Object oldValue;  // Старое значение
     private Object newValue;  // Новое значение
@@ -14,7 +14,7 @@ public class DiffEntry {
         this.newValue = newValue;
         this.key = key;
     }
-
+    private static final Comparator<DiffEntry> keyComparator = Comparator.comparing(DiffEntry::getKey);
     // Геттеры и сеттеры
     public String getStatus() {
         return status;
@@ -50,19 +50,15 @@ public class DiffEntry {
 
     @Override
     public String toString() {
-        return "DiffEntry{" +
-            "status='" + status + '\'' +
-            ", oldValue=" + oldValue +
-            ", newValue=" + newValue +
-            ", key='" + key + '\'' +
-            '}';
+        return "DiffEntry{"
+            + "status='" + status + '\''
+            + ", oldValue=" + oldValue
+            + ", newValue=" + newValue
+            + ", key='" + key + '\''
+            + '}';
     }
 
-    // Компаратор для сортировки по ключу
-    public static Comparator<DiffEntry> keyComparator = new Comparator<DiffEntry>() {
-        @Override
-        public int compare(DiffEntry o1, DiffEntry o2) {
-            return o1.getKey().compareTo(o2.getKey());
-        }
-    };
+    public static Comparator<DiffEntry> getKeyComparator() {
+        return keyComparator;
+    }
 }

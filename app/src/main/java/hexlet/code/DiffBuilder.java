@@ -38,7 +38,7 @@ public class DiffBuilder {
         }
 
         // Сортировка списка по ключу
-        Collections.sort(result, DiffEntry.keyComparator);
+        Collections.sort(result, DiffEntry.getKeyComparator());
 
         return result;
     }

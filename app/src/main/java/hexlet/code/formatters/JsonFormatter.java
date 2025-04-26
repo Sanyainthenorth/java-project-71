@@ -19,23 +19,20 @@ public final class JsonFormatter implements Formatter {
             Map<String, Map<String, Object>> resultMap = new LinkedHashMap<>();
             for (DiffEntry entry : diffEntries) {
                 Map<String, Object> entryMap = new LinkedHashMap<>();
-
-                switch (entry.getStatus()) {
-                    case "unchanged":
-                    case "removed":
-                        entryMap.put("oldValue", entry.getOldValue());
-                        entryMap.put("status", entry.getStatus());
-                        break;
-                    case "changed":
-                        entryMap.put("newValue", entry.getNewValue());
-                        entryMap.put("oldValue", entry.getOldValue());
-                        entryMap.put("status", entry.getStatus());
-                        break;
-                    case "added":
-                        entryMap.put("newValue", entry.getNewValue());
-                        entryMap.put("status", entry.getStatus());
-                        break;
+                String status = entry.getStatus();
+                
+                if ("unchanged".equals(status)) {
+                    entryMap.put("oldValue", entry.getOldValue());
+                } else if ("removed".equals(status)) {
+                    entryMap.put("oldValue", entry.getOldValue());
+                } else if ("changed".equals(status)) {
+                    entryMap.put("newValue", entry.getNewValue());
+                    entryMap.put("oldValue", entry.getOldValue());
+                } else if ("added".equals(status)) {
+                    entryMap.put("newValue", entry.getNewValue());
                 }
+
+                entryMap.put("status", status);
 
                 resultMap.put(entry.getKey(), entryMap);
             }
