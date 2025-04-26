@@ -30,6 +30,7 @@ public final class JsonFormatter implements Formatter {
                         entryMap.put("oldValue", entry.getOldValue());
                     }
                     case UNCHANGED -> entryMap.put("oldValue", entry.getOldValue());
+                    default -> throw new IllegalArgumentException("Unknown status: " + status);
                 }
 
                 entryMap.put("status", status.getValue().toLowerCase());
