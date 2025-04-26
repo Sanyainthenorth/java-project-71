@@ -1,7 +1,9 @@
 package hexlet.code.formatters;
 
-import java.util.Map;
+import hexlet.code.DiffEntry;
+
+import java.util.List;
 
 public interface Formatter {
-    String format(Map<String, Map<String, Object>> diff);
+    String format(List<DiffEntry> diff);
 }

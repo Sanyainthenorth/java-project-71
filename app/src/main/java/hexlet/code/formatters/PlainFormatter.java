@@ -1,22 +1,24 @@
 package hexlet.code.formatters;
 
+import hexlet.code.DiffEntry;
+
+import java.util.List;
 import java.util.Map;
 
 public final class PlainFormatter implements Formatter {
     @Override
-    public String format(Map<String, Map<String, Object>> diff) {
+    public String format(List<DiffEntry> diffEntries) {
         StringBuilder result = new StringBuilder();
 
-        for (Map.Entry<String, Map<String, Object>> entry : diff.entrySet()) {
+        for (DiffEntry entry : diffEntries) {
             String key = entry.getKey();
-            Map<String, Object> node = entry.getValue();
-            String status = (String) node.get("status");
+            String status = entry.getStatus();
 
             switch (status) {
                 case "added":
                     result.append(String.format(
                         "Property '%s' was added with value: %s\n",
-                        key, formatValue(node.get("newValue"))
+                        key, formatValue(entry.getNewValue())
                     ));
                     break;
                 case "removed":
@@ -25,7 +27,7 @@ public final class PlainFormatter implements Formatter {
                 case "changed":
                     result.append(String.format(
                         "Property '%s' was updated. From %s to %s\n",
-                        key, formatValue(node.get("oldValue")), formatValue(node.get("newValue"))
+                        key, formatValue(entry.getOldValue()), formatValue(entry.getNewValue())
                     ));
                     break;
                 case "unchanged":
@@ -43,7 +45,7 @@ public final class PlainFormatter implements Formatter {
             return "null";
         }
         if (value instanceof String) {
-            return "'" + value + "'"; // ← Добавлены кавычки для строк
+            return "'" + value + "'"; // Добавлены кавычки для строк
         }
         if (value instanceof Map || value instanceof Iterable) {
             return "[complex value]";
